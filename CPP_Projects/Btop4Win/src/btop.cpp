@@ -18,9 +18,9 @@
 #include <atomic>
 
 #include "btop_draw.hpp"
-#include "btop_tools.h"
+#include "btop_tools.hpp"
 #include "btop_config.hpp"
-#include "btop_theme.h"
+#include "btop_theme.hpp"
 
 #include <filesystem>
 
@@ -179,13 +179,18 @@ int main(int argc,char** argv){
     wchar_t self_path[FILENAME_MAX]={0};
     GetModuleFileNameW(nullptr,self_path,FILENAME_MAX);
 
-    //std::cout<<self_path<<endl;
-    //string conf_dir=fs::path(self_path).remove_filename().string();
-    //std::cout<<conf_dir<<std::endl;
+
     Config::conf_dir=fs::path(self_path).remove_filename();
-    //Config::conf_file=Config::conf_dir/"btop.conf";
-    //Logger::logfile=Config::conf_dir/"btop.log";
-    //Theme::theme_dir=Config::conf_dir/"themes";
+    Config::conf_file=Config::conf_dir/"btop.conf";
+    Logger::logfile=Config::conf_dir/"btop.log";
+    Theme::theme_dir=Config::conf_dir/"themes";
+    std::cout<<Config::conf_dir.string()<<"\n"<<Config::conf_file.string()
+             <<Logger::logfile.string()<<"\n"<<Theme::theme_dir.string();
+
+    {
+        vector<string> load_warnings;
+        Config::load(Config::conf_file,load_warnings);
+    }
 
 
     return 0;

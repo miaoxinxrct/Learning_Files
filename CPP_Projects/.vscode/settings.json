@@ -1,8 +1,18 @@
 {
     "files.associations": {
-        "xutility": "cpp",
+        "numeric": "cpp",
+        "locale": "cpp",
         "algorithm": "cpp",
-        "cstdlib": "cpp",
-        "vector": "cpp"
-    }
+        "chrono": "cpp",
+        "xstring": "cpp",
+        "string": "cpp",
+        "xxatomic": "cpp",
+        "filesystem": "cpp",
+        "iostream": "cpp",
+        "*.tcc": "cpp",
+        "concepts": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "disabled",
+    "cmake.generator": "MinGW Makefiles",
+    "cmake.sourceDirectory": "E:/Git/CPP_Projects/Btop4Win/src"
 }

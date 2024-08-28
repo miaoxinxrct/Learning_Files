@@ -5,6 +5,7 @@
 #include <string_view>
 
 #include "btop_config.hpp"
+#include "btop_tools.hpp"
 
 using std::array,std::atomic,std::string_view,std::string_literals::operator""s;
 namespace fs=std::filesystem;
@@ -67,7 +68,7 @@ namespace Config{
         {"cpu_buttom",          "#* Show CPU box at bottom of screen instead of top."},
         {"show_uptime",         "#* Show the system uptime in the CPU box."},
         {"check_temp",          "#* Show CPU temperature."},
-        {"cpu_sensor",          "#* Which sensor to use for temperature, use options menu to select from list of available sensors."tures},
+        {"cpu_sensor",          "#* Which sensor to use for temperature, use options menu to select from list of available sensors."},
         {"show_coretemp",       "#* Show temperatures for cpu cores also if check_temp is True and sensors has been found."},
         {"temp_scale",          "#* Which temperatures scale to use, available values: \"celsius\", \"fahrenheit\", \"kelvin\" and \"rankine\"."},
         {"base_10_sizes",       "#* Use base 10 for bits/bytes sizes, KB=1000 instead of KiB=1024."},
@@ -181,13 +182,148 @@ namespace Config{
         {"proc_selected",0},
         {"proc_last_selected",0},
         {"gpu_mem_override",0}
-    }
+    };
     unordered_flat_map<string,int> intsTmp;
 
     bool _locked(const string& name){
         atomic_wait(writelock,true);
-        if(not write_new and rng::find_if(descriptions,[&name](const auto& a){return a.at(0)==name;})!descriptions.end())
+        if(not write_new and rng::find_if(descriptions,[&name](const auto& a){return a.at(0)==name;})!=descriptions.end())
             write_new=true;
         return locked.load();
+    }
+
+    fs::path conf_dir;
+    fs::path conf_file;
+
+    string validError;
+    //357
+    bool intValid(const string& name,const string& value){
+        int i_value;
+        try{
+            i_value=stoi(value);
+        }
+        catch(const std::invalid_argument&){
+            validError="Invalid numerical value!";
+            return false;
+        }
+        catch(const std::out_of_range&){
+            validError="Value out of range!";
+            return false;
+        }
+        catch(const std::exception& e){
+            validError=(string)e.what();
+            return false;
+        }
+        if(name == "update_ms" and i_value<100)
+            validError="Config value update_ms set too low (<100).";
+        else if(name =="update_ms" and i_value>86400000)
+            validError="Config value update_ms set too high (>86400000).";
+        else 
+            return true;
+        return false;
+    }
+
+    //387
+    bool stringValid(const string& name,const string& value){
+        if(name=="log_level" and not v_contains(Logger::log_levels,value))
+            validError="Invalid log_level: "+value;
+        else if(name=="graph_symbol" and not v_contains(valid_graph_symbols,value))
+            validError="Invalid graph symbol identifier: "+value;
+        else if(name.starts_with("graph_symbol_") and (value!="default" and not v_contains(valid_graph_symbols,value)))
+            validError="Invalid graph symbol identifier for "+name+": "+value;
+        // else if(name=="shown_boxes" and not value.empty() and not check_boxes(value))
+        //     validError="Invalid box name(s) in shown_boxes";
+        // else if(name=="presets" and not presetsValid(value))
+        //     return false;
+        // else if(name=="proc_sorting" and not v_contains(Proc::sort_vector,value))
+        //     validError="Invalid process sorting option!"
+        // else if(name=="services_sorting" and not v_contains(Proc::sort_vector_service,value))
+        //     validError="Invalid serivices sorting option!"
+        // else if(name=="io_graph_speeds"){
+        //     const auto maps=ssplit(value);
+        //     bool all_good=true;
+        //     for(const auto& map:maps){
+        //         const auto map_split=ssplit(map,'\\');
+        //         if(map_split.size()!=2)
+        //             all_good=false;
+        //         else if(map_split.at(0).empty() or not isint(map_split.at(1)))
+        //             all_good=false;
+        //         if(not all_good){
+        //             validError="Invalid formatting of io_graph_speeds!";
+        //             return false;
+        //         }
+        //     }
+        //     return true;
+        // }
+        else 
+            return true;
+        return false;
+    }
+    //521
+    void load(const std::filesystem::path& conf_file,vector<string>& load_warnings)
+    {
+        if(conf_file.empty())
+            return;
+        else if(not fs::exists(conf_file)){
+            write_new=true;
+            return;
+        }
+        std::ifstream created(conf_file);
+        if(created.good()){
+            vector<string> valid_names;
+            for(auto& n:descriptions)
+                valid_names.push_back(n[0]);
+            if(string v_string; created.peek()!='#' or (getline(created,v_string,'\n') and not s_contains(v_string,Global::Version)))
+                write_new=true;
+            while(not created.eof()){
+                created>>std::ws;
+                if(created.peek()=='#'){
+                    created.ignore(SSmax,'\n');
+                    continue;
+                }
+                string name,value;
+                getline(created,name,'=');
+                if(name.ends_with(' '))
+                    name=trim(name);
+                if(not v_contains(valid_names,name)){
+                    created.ignore(SSmax,'\n');
+                    continue;
+                }
+                created>>std::ws;
+
+                if(bools.contains(name)){
+                    created>>value;
+                    if(not isbool(value))
+                        load_warnings.push_back("Got an invalid bool value for config name: "+ name);
+                    else
+                        bools.at(name)=stobool(value);
+                }
+                else if(ints.contains(name)){
+                    created>>value;
+                    if(not isint(value))
+                        load_warnings.push_back("Got an invalid integer value for config name: "+name);
+                    else if(not intValid(name,value))
+                        load_warnings.push_back(validError);
+                    else
+                        ints.at(name)=stoi(value);
+                }
+                else if(strings.contains(name)){
+                    if(created.peek()=='"'){
+                        created.ignore(1);
+                        getline(created,value,'"');
+                    }
+                    else
+                        created>>value;
+                    
+                    if(not stringValid(name,value))
+                        load_warnings.push_back(validError);
+                    else
+                        strings.at(name)=value;
+                }
+                created.ignore(SSmax,'\n');
+            }
+            if(not load_warnings.empty())
+                write_new=true;
+        }
     }
 }

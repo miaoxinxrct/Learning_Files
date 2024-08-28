@@ -1,8 +1,15 @@
+#ifndef BTOP_CONFIG_HPP
+#define BTOP_CONFIG_HPP
+
+
 #include <atomic>
 #include <array>
 #include <filesystem>
 #include <string>
 #include "robin_hood.h"
+
+#include "btop_shared.hpp"
+
 
 using std::string,std::vector,robin_hood::unordered_flat_map;
 
@@ -18,7 +25,10 @@ namespace Config
     extern unordered_flat_map<string,int> ints;
     extern unordered_flat_map<string,int> intsTmp;
 
-    
+    const vector<string> valid_graph_symbols={"braille","block","tty"};
+    const vector<string> valid_graph_symbols_def={"default","braille","block","tty"};
+    const vector<string> valid_boxes={"cpu","mem","net","proc"};
+    const vector<string> temp_scales={"celsius","fahrenheit","kelvin","rankine"}; 
 
 
     //63
@@ -48,4 +58,11 @@ namespace Config
         else
             strings.at(name)=value;
     }
+
+    //108
+    void load(const std::filesystem::path& conf_file,vector<string>& load_warnings);
+
+
 }
+
+#endif

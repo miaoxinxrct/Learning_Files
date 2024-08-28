@@ -1,3 +1,6 @@
+#ifndef BTOP_DRAW_HPP
+#define BTOP_DRAW_HPP
+
 #include <string>
 #include <vector>
 #include <array>
@@ -101,3 +104,5 @@ namespace Proc{
     extern unordered_flat_map<size_t,Draw::Graph> p_graphs;
     extern unordered_flat_map<size_t,int> p_counters;
 }
+
+#endif
