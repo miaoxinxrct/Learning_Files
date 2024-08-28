@@ -8,7 +8,7 @@
             "name": "(gdb) Windows 上的 Bash 启动",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/main.exe",
+            "program": "${workspaceFolder}/Btop4Win.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

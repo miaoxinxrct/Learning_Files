@@ -100,7 +100,7 @@ namespace Config{
     };
 
     unordered_flat_map<string,string> strings={
-        {"clolor_theme","Default"},
+        {"color_theme","Default"},
         {"show_boxes","cpu mem net proc"},
         {"graph_symbol","tty"},
         {"presets","cpu:1:default,proc:0:default cpu:0:default,mem:0:default,net:0:default cpu:0:block,net:0:tty"},
@@ -259,6 +259,17 @@ namespace Config{
             return true;
         return false;
     }
+    //488
+    // bool check_boxes(const string& boxes){
+    //     auto new_boxes=ssplit(boxes);
+    //     for(auto& box:new_boxes){
+    //         if(not v_contains(valid_boxes,box))
+    //             return false;
+    //     }
+    //     current_boxes=move(new_boxes);
+    //     return true;
+    // }
+
     //521
     void load(const std::filesystem::path& conf_file,vector<string>& load_warnings)
     {

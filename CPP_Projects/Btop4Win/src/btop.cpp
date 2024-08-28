@@ -184,12 +184,16 @@ int main(int argc,char** argv){
     Config::conf_file=Config::conf_dir/"btop.conf";
     Logger::logfile=Config::conf_dir/"btop.log";
     Theme::theme_dir=Config::conf_dir/"themes";
-    std::cout<<Config::conf_dir.string()<<"\n"<<Config::conf_file.string()
-             <<Logger::logfile.string()<<"\n"<<Theme::theme_dir.string();
+    //std::cout<<Config::conf_dir.string()<<"\n"<<Config::conf_file.string()<<"\n"
+    //         <<Logger::logfile.string()<<"\n"<<Theme::theme_dir.string();
 
     {
         vector<string> load_warnings;
         Config::load(Config::conf_file,load_warnings);
+
+        //if(Config::current_boxes.empty())
+        //    Config::check_boxes(Config::getS("shown_boxes"));
+        
     }
 
 

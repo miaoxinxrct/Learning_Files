@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\Btop4Win.dir/objects.a
+C:\PROGRA~1\mingw64\bin\ar.exe qc CMakeFiles\Btop4Win.dir/objects.a @CMakeFiles\Btop4Win.dir\objects1.rsp
+C:\PROGRA~1\mingw64\bin\C__~1.EXE -g -Wl,--dependency-file,CMakeFiles\Btop4Win.dir\link.d -Wl,--whole-archive CMakeFiles\Btop4Win.dir/objects.a -Wl,--no-whole-archive -o Btop4Win.exe -Wl,--out-implib,libBtop4Win.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Btop4Win.dir\linkLibs.rsp
