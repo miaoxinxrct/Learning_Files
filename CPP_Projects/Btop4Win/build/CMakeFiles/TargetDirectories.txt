@@ -1,3 +1,0 @@
-E:/Git/CPP_Projects/Btop4Win/build/CMakeFiles/Btop4Win.dir
-E:/Git/CPP_Projects/Btop4Win/build/CMakeFiles/edit_cache.dir
-E:/Git/CPP_Projects/Btop4Win/build/CMakeFiles/rebuild_cache.dir
