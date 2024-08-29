@@ -6,6 +6,8 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGES} -g")
+
 
 project(Btop4Win)
 

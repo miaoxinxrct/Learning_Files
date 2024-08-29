@@ -1,7 +1,7 @@
 #include <thread>
 #include <numeric>
 #include <ranges>
-#include <cmath>
+//#include <math.h>
 #include <iostream>
 #include <semaphore>
 

@@ -20,7 +20,7 @@ namespace Config{
     const vector<array<string,2>> descriptions={
         {"color_theme",         "#* Name if a btop++/bpytop/bashtop formatted \".theme\" file,\"Default\" and \"TTY\" for builtin themes.\n"
                                 "#* Themes should be placed in \"themes\" folder in same folder as btop4win.exe"},
-        {"theme_backgroup",     "#* If the theme set backgroud should be shown, set to False if you want terminal background transparency."},
+        {"theme_background",     "#* If the theme set backgroud should be shown, set to False if you want terminal background transparency."},
         {"truecolor",           "#* Sets if 24-bit truecolor should be used, will convert 24-bit colors to 256 color (6x6x6 color cube) if false"},
         {"force_tty",           "#* Set to true to force tty mode regardless if a real tty has been detected or not.\n"
                                 "#* Will force 16-color mode and TTY theme, set all graph symbols to \"tty\" and swap out other non tty friendly symbols."},
@@ -101,7 +101,7 @@ namespace Config{
 
     unordered_flat_map<string,string> strings={
         {"color_theme","Default"},
-        {"show_boxes","cpu mem net proc"},
+        {"shown_boxes","cpu mem net proc"},
         {"graph_symbol","tty"},
         {"presets","cpu:1:default,proc:0:default cpu:0:default,mem:0:default,net:0:default cpu:0:block,net:0:tty"},
         {"graph_symbol_cpu","default"},
@@ -192,10 +192,55 @@ namespace Config{
         return locked.load();
     }
 
+    //277
     fs::path conf_dir;
     fs::path conf_file;
 
+
+    //282
+    vector<string> current_boxes;
+    vector<string> preset_list={"cpu:0:default,mem:0:default,net:0:default,proc:0:default"};
+
     string validError;
+    //286
+    bool presetsValid(const string& presets){
+        vector<string> new_presets={preset_list.at(0)};
+
+        for(int x=0;const auto& preset:ssplit(presets)){
+            if(++x>9){
+                validError="To many presets entered!";
+                return false;
+            }
+            for(int y=0;const auto& box:ssplit(preset,',')){
+                if(++y>4){
+                    validError="To many boxes entered for preset!";
+                    return false;
+                }
+                const auto& vals=ssplit(box,':');
+                if(vals.size()!=3){
+                    validError="Malformatted preset in config value presets!";
+                    return false;
+                }
+                if(not is_in(vals.at(0),"cpu","mem","net","proc")){
+                    validError="Invalid position value in config value presets!";
+                    return false;
+                }
+                if(not is_in(vals.at(1),"0","1")){
+                    validError="Invalid position value in config value presets!";
+                    return false;
+                }
+                if(not v_contains(valid_graph_symbols_def,vals.at(2))){
+                    validError="Invalid graph name in config value presets!";
+                    return false;
+                }
+            }
+            new_presets.push_back(preset);
+        }
+        preset_list=move(new_presets);
+        return true;
+    }
+
+   
     //357
     bool intValid(const string& name,const string& value){
         int i_value;
@@ -231,10 +276,10 @@ namespace Config{
             validError="Invalid graph symbol identifier: "+value;
         else if(name.starts_with("graph_symbol_") and (value!="default" and not v_contains(valid_graph_symbols,value)))
             validError="Invalid graph symbol identifier for "+name+": "+value;
-        // else if(name=="shown_boxes" and not value.empty() and not check_boxes(value))
-        //     validError="Invalid box name(s) in shown_boxes";
-        // else if(name=="presets" and not presetsValid(value))
-        //     return false;
+        else if(name=="shown_boxes" and not value.empty() and not check_boxes(value))
+            validError="Invalid box name(s) in shown_boxes";
+        else if(name=="presets" and not presetsValid(value))
+            return false;
         // else if(name=="proc_sorting" and not v_contains(Proc::sort_vector,value))
         //     validError="Invalid process sorting option!"
         // else if(name=="services_sorting" and not v_contains(Proc::sort_vector_service,value))
@@ -259,16 +304,17 @@ namespace Config{
             return true;
         return false;
     }
+
     //488
-    // bool check_boxes(const string& boxes){
-    //     auto new_boxes=ssplit(boxes);
-    //     for(auto& box:new_boxes){
-    //         if(not v_contains(valid_boxes,box))
-    //             return false;
-    //     }
-    //     current_boxes=move(new_boxes);
-    //     return true;
-    // }
+    bool check_boxes(const string& boxes){
+        auto new_boxes=ssplit(boxes);
+        for(auto& box:new_boxes){
+            if(not v_contains(valid_boxes,box))
+                return false;
+        }
+        current_boxes=move(new_boxes);
+        return true;
+    }
 
     //521
     void load(const std::filesystem::path& conf_file,vector<string>& load_warnings)
@@ -331,6 +377,7 @@ namespace Config{
                     else
                         strings.at(name)=value;
                 }
+                std::cout<<name<<" = "<<value<<"\n";
                 created.ignore(SSmax,'\n');
             }
             if(not load_warnings.empty())

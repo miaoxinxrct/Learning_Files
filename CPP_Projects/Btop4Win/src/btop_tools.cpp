@@ -22,6 +22,20 @@ namespace Tools{
             str_v.remove_suffix(t_str.size());
         return (string)str_v;
     }
+
+    auto ssplit(const string& str,const char& delim)->vector<string>{
+        vector<string> out;
+        if(str.empty())
+            return out;
+        size_t last=0;
+        for(size_t loc=str.find(delim);loc!=std::string::npos;loc=str.find(delim,last)){
+            out.push_back(str.substr(last,loc-last));
+            last=loc+1;
+        }
+        if(str.size()-last>0)
+            out.push_back(str.substr(last));
+        return out;
+    }
     
     //509
     void atomic_wait(const atomic<bool>& atom,const bool old) noexcept

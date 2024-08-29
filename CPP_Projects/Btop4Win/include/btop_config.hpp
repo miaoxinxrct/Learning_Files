@@ -6,6 +6,7 @@
 #include <array>
 #include <filesystem>
 #include <string>
+#include <iostream>
 #include "robin_hood.h"
 
 #include "btop_shared.hpp"
@@ -30,7 +31,8 @@ namespace Config
     const vector<string> valid_boxes={"cpu","mem","net","proc"};
     const vector<string> temp_scales={"celsius","fahrenheit","kelvin","rankine"}; 
 
-
+    //51
+    bool check_boxes(const string& boxes);
     //63
     bool _locked(const string& name);
 

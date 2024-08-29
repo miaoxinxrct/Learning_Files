@@ -65,7 +65,7 @@ namespace Tools
         return all_of(str.begin(),str.end(),::isdigit);
     }
 
-        //288
+    //288
     string ltrim(const string& str,const string& t_str=" ");
 
     //291
@@ -75,6 +75,9 @@ namespace Tools
     inline string trim(const string& str,const string& t_str=" "){
         return ltrim(rtrim(str,t_str),t_str);
     }
+
+    //310
+    auto ssplit(const string& str,const char& delim=' ')->vector<string>;
 }
 
 namespace Logger{
