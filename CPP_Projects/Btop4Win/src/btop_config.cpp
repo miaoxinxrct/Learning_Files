@@ -6,6 +6,7 @@
 
 #include "btop_config.hpp"
 #include "btop_tools.hpp"
+#include "btop_shared.hpp"
 
 using std::array,std::atomic,std::string_view,std::string_literals::operator""s;
 namespace fs=std::filesystem;
@@ -280,26 +281,26 @@ namespace Config{
             validError="Invalid box name(s) in shown_boxes";
         else if(name=="presets" and not presetsValid(value))
             return false;
-        // else if(name=="proc_sorting" and not v_contains(Proc::sort_vector,value))
-        //     validError="Invalid process sorting option!"
-        // else if(name=="services_sorting" and not v_contains(Proc::sort_vector_service,value))
-        //     validError="Invalid serivices sorting option!"
-        // else if(name=="io_graph_speeds"){
-        //     const auto maps=ssplit(value);
-        //     bool all_good=true;
-        //     for(const auto& map:maps){
-        //         const auto map_split=ssplit(map,'\\');
-        //         if(map_split.size()!=2)
-        //             all_good=false;
-        //         else if(map_split.at(0).empty() or not isint(map_split.at(1)))
-        //             all_good=false;
-        //         if(not all_good){
-        //             validError="Invalid formatting of io_graph_speeds!";
-        //             return false;
-        //         }
-        //     }
-        //     return true;
-        // }
+        else if(name=="proc_sorting" and not v_contains(Proc::sort_vector,value))
+            validError="Invalid process sorting option!";
+        else if(name=="services_sorting" and not v_contains(Proc::sort_vector_service,value))
+            validError="Invalid serivices sorting option!";
+        else if(name=="io_graph_speeds"){
+            const auto maps=ssplit(value);
+            bool all_good=true;
+            for(const auto& map:maps){
+                const auto map_split=ssplit(map,'\\');
+                if(map_split.size()!=2)
+                    all_good=false;
+                else if(map_split.at(0).empty() or not isint(map_split.at(1)))
+                    all_good=false;
+                if(not all_good){
+                    validError="Invalid formatting of io_graph_speeds!";
+                    return false;
+                }
+            }
+            return true;
+        }
         else 
             return true;
         return false;
@@ -377,7 +378,7 @@ namespace Config{
                     else
                         strings.at(name)=value;
                 }
-                std::cout<<name<<" = "<<value<<"\n";
+                //std::cout<<name<<" = "<<value<<"\n";
                 created.ignore(SSmax,'\n');
             }
             if(not load_warnings.empty())

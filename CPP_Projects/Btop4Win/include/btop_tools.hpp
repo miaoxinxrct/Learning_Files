@@ -29,6 +29,12 @@ namespace Tools
         return str.find(find_val) != string::npos;
     }
 
+    //248
+    template<typename T>
+    inline size_t v_index(const vector<T>& vec,const T& find_val){
+        return std::ranges::distance(vec.begin(),std::ranges::find(vec,find_val));
+    }
+
     //254
     template<typename First,typename ...T>
     inline bool is_in(const First& first,const T& ...t)
@@ -78,6 +84,19 @@ namespace Tools
 
     //310
     auto ssplit(const string& str,const char& delim=' ')->vector<string>;
+
+    //344
+    string strf_time(const string& strf);
+
+    //354
+    class atomic_lock{
+        private:
+            atomic<bool>& _atom;
+            bool _not_true=false;
+        public:
+            atomic_lock(atomic<bool>& atom,bool wait=false);
+            ~atomic_lock();
+    };
 }
 
 namespace Logger{
@@ -89,6 +108,18 @@ namespace Logger{
         "DEBUG",
     };
     extern std::filesystem::path logfile;
+
+
+
+    //387
+    void set(const string& level);
+    //390
+    void log_write(const size_t level,const string& msg);
+
+    //394
+    inline void debug(const string msg){
+        log_write(4,msg);
+    }
 }
 
 #endif

@@ -5,17 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Windows 上的 Bash 启动",
+            "name": "(gdb)启动",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/Btop4Win.exe",
+            "program": "${workspaceFolder}//**.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "C:\\Program Files\\mingw64\bin\\gdb.exe",
+            "miDebuggerPath": "C:/Program Files/mingw64/bin/gdb.exe",
             "setupCommands": [
                 {
                     "description": "为 gdb 启用整齐打印",
@@ -29,5 +29,6 @@
                 }
             ]
         }
+
     ]
 }

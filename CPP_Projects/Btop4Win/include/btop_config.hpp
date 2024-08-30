@@ -31,10 +31,23 @@ namespace Config
     const vector<string> valid_boxes={"cpu","mem","net","proc"};
     const vector<string> temp_scales={"celsius","fahrenheit","kelvin","rankine"}; 
 
+    //46
+    extern vector<string> current_boxes;
+
     //51
     bool check_boxes(const string& boxes);
     //63
     bool _locked(const string& name);
+
+    //66
+    inline const bool& getB(const string& name){
+        return bools.at(name);
+    }
+
+    //72
+    inline const string& getS(const string& name){
+        return strings.at(name);
+    }
 
     //81
     inline void set(const string& name,const bool& value)
