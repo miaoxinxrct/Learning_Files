@@ -8,7 +8,7 @@
             "name": "(gdb)启动",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}//**.exe",
+            "program": "E:\\Git\\CPP_Projects\\Btop4Win\\build\\${fileBasenameNoExtension}**.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

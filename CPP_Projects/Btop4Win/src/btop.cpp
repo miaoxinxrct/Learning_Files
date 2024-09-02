@@ -16,6 +16,7 @@
 
 #include <vector>
 #include <atomic>
+#include <array>
 
 #include "btop_draw.hpp"
 #include "btop_tools.hpp"
@@ -24,7 +25,7 @@
 
 #include <filesystem>
 
-using std::string,std::string_view,std::vector,std::atomic,std::endl,std::cout,std::min,std::flush;
+using std::string,std::string_view,std::vector,std::atomic,std::endl,std::cout,std::min,std::flush,std::array;
 using std::string_literals::operator""s,std::to_string;
 using std::array;
 
@@ -199,7 +200,19 @@ int main(int argc,char** argv){
             Logger::set("DEBUG"),
             Logger::debug("Starting in DEBUG mode!");
         }
-        
+        else{
+            Logger::set(Config::getS("log_level"));
+        }
+
+        Logger::info("Logger set to "+(Global::debug?"DEBUG":Config::getS("log_level")));
+
+        for(const auto& err_str:load_warnings)
+            Logger::warning(err_str); 
+    }
+
+    if(not Term::init()){
+        Global::exit_error_msg="No tty detached!\nbtop4win needs an interactive shell to run.";
+        clean_quit(1);
     }
 
 
