@@ -8,6 +8,8 @@
 #include "btop_tools.hpp"
 #include "btop_shared.hpp"
 #include "btop_proc.hpp"
+#include "btop_logger.hpp"
+#include "btop_global.hpp"
 
 using std::array,std::atomic,std::string_view,std::string_literals::operator""s;
 namespace fs=std::filesystem;

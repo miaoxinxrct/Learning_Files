@@ -7,6 +7,8 @@
 #include <deque>
 #include "robin_hood.h"
 
+#include "btop_proc.hpp"
+
 namespace Proc{
     extern Draw::TextEdit filter;
     extern unordered_flat_map<size_t,Draw::Graph> p_graphs;
