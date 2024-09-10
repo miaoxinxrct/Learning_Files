@@ -14,6 +14,8 @@
 // #define NOMINMAX
 // #define WIN32_LEAN_AND_MEAN
 // #define VC_EXTRALEAN
+#include <winsock2.h>
+
 #include <windows.h>
 
 #include <winreg.h>
