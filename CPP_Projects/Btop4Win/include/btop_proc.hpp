@@ -1,5 +1,5 @@
-#ifndef BTOP_DRAW_HPP
-#define BTOP_DRAW_HPP
+#ifndef BTOP_PROC_HPP
+#define BTOP_PROC_HPP
 
 #include <string>
 #include <vector>
@@ -7,7 +7,7 @@
 #include <deque>
 #include "robin_hood.h"
 
-#include "btop_proc.hpp"
+#include "btop_draw.hpp"
 
 namespace Proc{
     extern Draw::TextEdit filter;
@@ -26,9 +26,6 @@ namespace Proc{
     extern atomic<uint64_t> WMItimer;
     extern bool services_swap;
 
-    //extern vector<string> sort_vector;
-   // extern vector<string> sort_vector_service;
-    
     //214
     const vector<string> sort_vector={
         "pid",

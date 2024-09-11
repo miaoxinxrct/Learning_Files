@@ -9,8 +9,6 @@
 
 using std::string,std::array,std::vector,robin_hood::unordered_flat_map,std::deque;
 
-
-
 namespace Draw{
 
     string banner_gen(int y=0,int x=0,bool centered=false,bool redraw=false);

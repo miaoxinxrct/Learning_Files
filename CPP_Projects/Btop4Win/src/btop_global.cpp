@@ -1,5 +1,12 @@
 #include "btop_global.hpp"
 
+#include <array>
+#include <vector>
+#include <filesystem>
+
+using std::array,std::vector;
+using fs=filesystem;
+
 
 namespace Global
 {

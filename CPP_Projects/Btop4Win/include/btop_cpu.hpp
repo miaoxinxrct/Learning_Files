@@ -5,10 +5,13 @@
 #include <vector>
 #include <tuple>
 #include <atomic>
+#include <deque>
+#include <array>
 
 #include "robin_hood.h"
 
-using std::string,std::vector,std::tuple,std::atomic;
+using std::string,std::vector,std::tuple,std::atomic,std::deque,std::array;
+using robin_hood::unordered_flat_map;
 
 namespace Cpu{
     extern string box;
