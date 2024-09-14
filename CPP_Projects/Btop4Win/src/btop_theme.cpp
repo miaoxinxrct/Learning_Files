@@ -1,5 +1,6 @@
 #include "btop_theme.hpp"
 #include "btop_tools.hpp"
+#include "btop_fx.hpp"
 
 namespace fs=std::filesystem;
 

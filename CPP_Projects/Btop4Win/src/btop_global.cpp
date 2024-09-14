@@ -5,7 +5,7 @@
 #include <filesystem>
 
 using std::array,std::vector;
-using fs=filesystem;
+namespace fs=std::filesystem;
 
 
 namespace Global

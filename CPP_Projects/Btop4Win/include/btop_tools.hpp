@@ -8,6 +8,7 @@
 #include <vector>
 #include <regex>
 #include <array>
+#include <thread>
 
 
 using std::atomic,std::string,std::vector,std::array;
@@ -86,8 +87,17 @@ namespace Tools{
     //310
     auto ssplit(const string& str,const char& delim=' ')->vector<string>;
 
+    inline void sleep_ms(const size_t& ms){
+        std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+    }
+
+    string sec_to_dhms(size_t seconds,bool no_days=false,bool no_seconds=false);
     //344
     string strf_time(const string& strf);
+
+    void atomic_wait(const atomic<bool>& atom,const bool old) noexcept;
+
+    void atomic_wait_for(const atomic<bool>& atom,const bool old,const uint64_t waits_ms) noexcept;
 
     //354
     class atomic_lock{

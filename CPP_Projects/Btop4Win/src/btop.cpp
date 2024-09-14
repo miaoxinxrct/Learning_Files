@@ -13,6 +13,10 @@
 
 #include <windows.h>
 
+#include <stdlib.h>
+//#include <stdio.h>
+//#include <cstdlib>
+
 
 #include <vector>
 #include <atomic>
@@ -25,6 +29,8 @@
 #include "btop_logger.hpp"
 #include "btop_global.hpp"
 #include "btop_term.hpp"
+#include "btop_runner.hpp"
+
 
 
 #include <filesystem>
@@ -39,7 +45,7 @@ namespace rng=std::ranges;
 using namespace Tools;
 using namespace std::chrono_literals;
 
-
+//extern "C" [[noreturn]] void quick_exit(int) noexcept;
 
 void argumentParser(const int& argc,char** argv)
 {
@@ -102,22 +108,22 @@ void clean_quit(int sig){
     if(Global::quitting)
         return;
     Global::quitting=true;
-    //Runner::stop();
+    Runner::stop();
 
-    //Config::write();
+    Config::write();
 
-    // if(Term::initialized){
-    //     Term::restore();
-    // }
-    // if(not Global::exit_error_msg.empty()){
-    //     sig=1;
-    //     Logger::error(Global::exit_error_msg);
-    //     std::cerr<<Global::fg_red<<"ERROR: "<<Global::fg_write<<Global::exit_error_msg<<Fx::reset<<endl;
-    // }
-    // Logger::info("Quitting! Runtime: "+sec_to_dhms(time_s()-Global::start_time));
+    if(Term::initialized){
+         Term::restore();
+    }
+    if(not Global::exit_error_msg.empty()){
+         sig=1;
+         Logger::error(Global::exit_error_msg);
+         std::cerr<<Global::fg_red<<"ERROR: "<<Global::fg_white<<Global::exit_error_msg<<Fx::reset<<endl;
+    }
+    Logger::info("Quitting! Runtime: "+sec_to_dhms(time_s()-Global::start_time));
 
-    // const auto excode =(sig!=-1?sig:0);
-    // quick_exit(excode);
+    const auto excode =(sig!=-1?sig:0);
+    quick_exit(excode);
 }
 
 BOOL WINAPI CtrlHandler(DWORD fdwCtrlType){
@@ -153,8 +159,8 @@ int main(int argc,char** argv){
     Config::conf_file=Config::conf_dir/"btop.conf";
     Logger::logfile=Config::conf_dir/"btop.log";
     Theme::theme_dir=Config::conf_dir/"themes";
-    std::cout<<Config::conf_dir.string()<<"\n"<<Config::conf_file.string()<<"\n"
-             <<Logger::logfile.string()<<"\n"<<Theme::theme_dir.string();
+    //std::cout<<Config::conf_dir.string()<<"\n"<<Config::conf_file.string()<<"\n"
+    //         <<Logger::logfile.string()<<"\n"<<Theme::theme_dir.string();
 
     {
         vector<string> load_warnings;
@@ -183,6 +189,17 @@ int main(int argc,char** argv){
         clean_quit(1);
     }
 
+    {
+        int t_count=0;
+        while(Term::width<=0 or Term::width>10000 or Term::height<=0 or Term::height>10000){
+            sleep_ms(10);
+            Term::refresh();
+            if(++t_count==100){
+                Global::exit_error_msg="Failed to get size of terminal!";
+                clean_quit(1);
+            }
+        }
+    }
 
     return 0;
 }

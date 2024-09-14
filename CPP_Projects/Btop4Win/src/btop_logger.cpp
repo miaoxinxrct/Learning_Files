@@ -1,5 +1,14 @@
 #include "btop_logger.hpp"
 
+#include "btop_tools.hpp"
+#include "btop_global.hpp"
+
+
+#include <filesystem>
+#include <fstream>
+
+namespace fs=std::filesystem;
+
 
 namespace Logger{
     using namespace Tools;

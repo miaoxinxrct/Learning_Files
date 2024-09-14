@@ -3,10 +3,11 @@
 
 #include <string>
 #include <atomic>
+#include <array>
 
 #include "btop_fx.hpp"
 
-using std::string,std::atomic;
+using std::string,std::atomic,std::array;
 
 namespace Term{
     extern atomic<bool> initialized;

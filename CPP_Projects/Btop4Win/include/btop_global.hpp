@@ -21,6 +21,11 @@ namespace Global{
     extern atomic<bool> quitting;
 
     extern uint64_t start_time;
+
+    const string bg_black="\033[0;40m";
+    const string fg_white="\033[1;97m";
+    const string fg_green="\033[1;92m";
+    const string fg_red="\033[0;91m";
 }
 
 #endif

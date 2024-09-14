@@ -5,9 +5,13 @@
 #include <vector>
 #include <array>
 #include <deque>
+#include <atomic>
 #include "robin_hood.h"
 
 #include "btop_draw.hpp"
+
+using std::atomic,std::string,std::array,std::deque;
+using robin_hood::unordered_flat_map;
 
 namespace Proc{
     extern Draw::TextEdit filter;

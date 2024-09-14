@@ -77,7 +77,7 @@ namespace Config
     //108
     void load(const std::filesystem::path& conf_file,vector<string>& load_warnings);
 
-
+    void write();
 }
 
 #endif

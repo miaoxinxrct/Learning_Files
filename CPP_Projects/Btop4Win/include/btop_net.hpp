@@ -3,10 +3,12 @@
 
 #include <string>
 #include <vector>
+#include <deque>
 
 #include "robin_hood.h"
 
-using std::string,std::vector;
+using std::string,std::vector,std::deque;
+using robin_hood::unordered_flat_map;
 
 namespace Net{
     extern string box;

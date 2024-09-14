@@ -9,7 +9,7 @@
 #include <btop_shared.hpp>
 
 
-using std::string_view,std::cin,std::cout,std::flush;
+using std::string_view,std::cin,std::cout,std::flush,std::to_string;
 namespace fs =std::filesystem;
 
 namespace Tools{
@@ -43,6 +43,17 @@ namespace Tools{
             out.push_back(str.substr(last));
         return out;
     }
+
+    string sec_to_dhms(size_t seconds,bool no_days,bool no_seconds){
+        size_t days=seconds/86400;seconds%=86400;
+        size_t hours=seconds/3600;seconds%=3600;
+        size_t minutes=seconds/60;seconds%=60;
+        string out = (not no_days and days >0?to_string(days)+"d ":"")
+                   + (hours<10?"0":"")+to_string(hours)+":"
+                   + (minutes<10?"0":"")+to_string(minutes)
+                   + (not no_seconds?":"+string(std::cmp_less(seconds,10)?"0":"")+to_string(seconds):"");
+        return out;
+    }
     
     //501
     string strf_time(const string& strf){
@@ -57,6 +68,11 @@ namespace Tools{
     void atomic_wait(const atomic<bool>& atom,const bool old) noexcept
     {
         while(atom.load(std::memory_order_relaxed)==old);
+    }
+
+    void atomic_wait_for(const atomic<bool>& atom,const bool old,const uint64_t wait_ms) noexcept{
+        const uint64_t start_time=time_ms();
+        while(atom.load(std::memory_order_relaxed)==old and (time_ms() -start_time<wait_ms)) sleep_ms(1);   
     }
 
     atomic_lock::atomic_lock(atomic<bool>& atom,bool wait):_atom(atom){

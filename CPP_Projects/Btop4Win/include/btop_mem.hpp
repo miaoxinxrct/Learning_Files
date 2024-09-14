@@ -4,10 +4,12 @@
 #include <string>
 #include <array>
 #include <deque>
+#include <vector>
 
 #include "robin_hood.h"
 
-using std::string,std::deque,std::array;
+using std::string,std::deque,std::array,std::vector;
+using robin_hood::unordered_flat_map;
 
 namespace Mem{
     extern string box;

@@ -388,4 +388,23 @@ namespace Config{
                 write_new=true;
         }
     }
+
+    void write(){
+        if(conf_file.empty() or not write_new)
+            return;
+        Logger::debug("Writing new config file");
+        std::ofstream cwrite(conf_file,std::ios::trunc);
+        if(cwrite.good()){
+            cwrite<<"#? Config file for btop4win v. "<<Global::Version;
+            for(auto [name,description]:descriptions){
+                cwrite<<"\n\n"<<(description.empty()?"":description+"\n")<<name<<" = ";
+                if(strings.contains(name))
+                    cwrite<<"\""<<strings.at(name)<<"\"";
+                else if(ints.contains(name))
+                    cwrite<<ints.at(name);
+                else if(bools.contains(name))
+                    cwrite<<(bools.at(name)?"True":"False");
+            }
+        }
+    }
 }

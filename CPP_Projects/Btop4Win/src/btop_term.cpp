@@ -1,5 +1,16 @@
 #include "btop_term.hpp"
 
+#include <windows.h>
+#include <iostream>
+
+#include "btop_mem.hpp"
+#include "btop_cpu.hpp"
+#include "btop_proc.hpp"
+#include "btop_net.hpp"
+#include "btop_global.hpp"
+
+using std::cin,std::cout,std::flush;
+
 
 namespace Term{
     atomic<bool> initialized=false;
@@ -66,7 +77,8 @@ namespace Term{
         if(not initialized){
             HANDLE handleOut=GetStdHandle(STD_OUTPUT_HANDLE);
             HANDLE handleIn=GetStdHandle(STD_INPUT_HANDLE);
-            initialized=(GetConsoleMode(handleOut,&out_saved_mode)&&GetConsoleMode(handleIn,&in_saved_mode));
+            std::cout<<GetConsoleMode(handleOut,&out_saved_mode)<<" "<<GetConsoleMode(handleIn,&in_saved_mode);
+            initialized=(GetConsoleMode(handleOut,&out_saved_mode) && GetConsoleMode(handleIn,&in_saved_mode));
 
             if(initialized){
                 set_modes();
