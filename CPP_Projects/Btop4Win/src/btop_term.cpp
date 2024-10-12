@@ -77,7 +77,10 @@ namespace Term{
         if(not initialized){
             HANDLE handleOut=GetStdHandle(STD_OUTPUT_HANDLE);
             HANDLE handleIn=GetStdHandle(STD_INPUT_HANDLE);
-            std::cout<<GetConsoleMode(handleOut,&out_saved_mode)<<" "<<GetConsoleMode(handleIn,&in_saved_mode);
+            std::cout<<GetConsoleMode(handleOut,&out_saved_mode)<<" "<<GetConsoleMode(handleIn,&in_saved_mode)<<"\n";
+            //DWORD error=GetLastError(); 输出值是5，说是对文件没有操作权限
+            //此处失败是因为终端问题，需要cmd
+
             initialized=(GetConsoleMode(handleOut,&out_saved_mode) && GetConsoleMode(handleIn,&in_saved_mode));
 
             if(initialized){
@@ -89,7 +92,7 @@ namespace Term{
                 cout.tie(NULL);
                 refresh();
 
-                cout<<alt_screen<<hide_cursor<<flush;
+                cout<<alt_screen<<hide_cursor<<flush<<"\n";
                 Global::resized=false;
             }
         }

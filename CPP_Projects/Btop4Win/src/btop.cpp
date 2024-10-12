@@ -4,6 +4,7 @@
 //#include <math.h>
 #include <iostream>
 #include <semaphore>
+#include <stdio.h>
 
 #define _WIN32_DCOM
 //#define _WIN32_WINNT 0x0600
@@ -123,7 +124,8 @@ void clean_quit(int sig){
     Logger::info("Quitting! Runtime: "+sec_to_dhms(time_s()-Global::start_time));
 
     const auto excode =(sig!=-1?sig:0);
-    quick_exit(excode);
+    //quick_exit(excode);
+    exit(excode);
 }
 
 BOOL WINAPI CtrlHandler(DWORD fdwCtrlType){
@@ -159,8 +161,8 @@ int main(int argc,char** argv){
     Config::conf_file=Config::conf_dir/"btop.conf";
     Logger::logfile=Config::conf_dir/"btop.log";
     Theme::theme_dir=Config::conf_dir/"themes";
-    //std::cout<<Config::conf_dir.string()<<"\n"<<Config::conf_file.string()<<"\n"
-    //         <<Logger::logfile.string()<<"\n"<<Theme::theme_dir.string();
+    std::cout<<Config::conf_dir.string()<<"\n"<<Config::conf_file.string()<<"\n"
+             <<Logger::logfile.string()<<"\n"<<Theme::theme_dir.string()<<"\n";
 
     {
         vector<string> load_warnings;
@@ -190,6 +192,7 @@ int main(int argc,char** argv){
     }
 
     {
+        std::cout<<"Check for valid terminal dimensions\n";
         int t_count=0;
         while(Term::width<=0 or Term::width>10000 or Term::height<=0 or Term::height>10000){
             sleep_ms(10);
@@ -199,6 +202,15 @@ int main(int argc,char** argv){
                 clean_quit(1);
             }
         }
+    }
+
+    std::cout<<"Collector init and error check\n";
+    try{
+        Shared::init();
+    }
+    catch(const std::exception& e){
+        Global::exit_error_msg="Exception in Shared::init() -> "+(string)e.what();
+        clean_quit(1);
     }
 
     return 0;

@@ -13,6 +13,7 @@
 using std::string,std::vector,std::tuple,std::atomic,std::deque,std::array;
 using robin_hood::unordered_flat_map;
 
+//This part for Shared
 namespace Cpu{
     extern string box;
     extern int x,y,width,height,min_width,min_height;
